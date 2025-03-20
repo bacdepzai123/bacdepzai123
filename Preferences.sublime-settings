@@ -1,0 +1,19 @@
+{
+	"color_scheme": "Monokai.sublime-color-scheme",
+	"ignored_packages":
+	[
+		"Vintage",
+	],
+	"index_files": true,
+	"font_size": 12,
+	"theme": "Default Dark.sublime-theme",
+	"dark_theme": "Default.sublime-theme",
+	"light_theme": "Default.sublime-theme",
+	"font_face": "Monospace",
+	"file_exclude_patterns" :
+	[
+		"*.sublime-project",
+		"*.sublime-workspace",
+	],
+	"word_wrap" : true,
+}
