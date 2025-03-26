@@ -51,7 +51,7 @@ template<typename Head, typename... Tail> void dbg_out(Head H, Tail... T) { cerr
 #define dbg(...)
 #endif
 
-void solve() {
+void run_case() {
     ;
 }
 
@@ -59,10 +59,10 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    int T = 1;
-    //cin >> T;
-    while(T--) {
-        solve();
+    int test_case = 1;
+    //cin >> test_case;
+    while(test_case--) {
+        run_case();
     }
     TIME_ELAPSED();
     return (0^0);
