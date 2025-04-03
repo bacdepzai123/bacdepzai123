@@ -51,8 +51,9 @@ template<typename Head, typename... Tail> void dbg_out(Head H, Tail... T) { cerr
 #define dbg(...)
 #endif
 
-void run_case() {
+void run_case(int testcase) {
     ;
+    //cout << "Case #" << testcase << ": ";
 }
 
 int main() {
