@@ -20,7 +20,7 @@ set mouse=a
 call plug#begin('~/.vim/plugged')
 " Theme OneDark
 Plug 'joshdick/onedark.vim'
-Plug 'voldikss/vim-floaterm'
+Plug 'kassio/neoterm'  " Thêm plugin neoterm
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
 " Quản lý cây thư mục (NERDTree)
 Plug 'preservim/nerdtree'
@@ -64,8 +64,6 @@ set guifont=Consolas:h10
 autocmd filetype cpp nnoremap <F9> :w <bar> !g++ -std=c++17 % -o %:r -Wl,--stack,268435456<CR>
 autocmd filetype cpp nnoremap <F10> :!%:r<CR>
 autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
-
-
 
 " Cấu hình Lualine đầy đủ (bao gồm tabline hiển thị buffer)
 lua << EOF
@@ -118,24 +116,18 @@ require('lualine').setup {
 }
 EOF
 
-" Đặt vị trí terminal nổi
-let g:floaterm_position = 'center'
-
-
+" =============================
+" 8. Cấu hình Neoterm
+" =============================
 " Mở terminal mới (Ctrl + T)
-nnoremap <F12> :FloatermNew<CR>
+nnoremap <F12> :Ttoggle<CR>
 
-" Đóng terminal (bấm ESC để về normal mode trước, rồi Ctrl + Q)
-tnoremap <C-q> <C-\><C-n>:FloatermKill<CR>
-
-" Ẩn/hiện terminal (Ctrl + H)
-nnoremap <C-g> :FloatermToggle<CR>
-tnoremap <C-g> <C-\><C-n>:FloatermToggle<CR>
+" Đóng terminal
+tnoremap <C-q> <C-\><C-n>:Tclose<CR>
 
 " Di chuyển giữa các terminal (nếu bạn mở nhiều)
-nnoremap <C-j> :FloatermNext<CR>
-nnoremap <C-k> :FloatermPrev<CR>
-
+nnoremap <C-j> :Tnext<CR>
+nnoremap <C-k> :Tprev<CR>
 
 " Overwrite some color highlight 
 if (has("autocmd"))
@@ -147,7 +139,5 @@ if (has("autocmd"))
   augroup END
 endif
 
-
 " Disable automatic comment in newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
