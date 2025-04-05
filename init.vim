@@ -117,10 +117,24 @@ require('lualine').setup {
 EOF
 
 " =============================
-" 8. Cấu hình Neoterm
+" 8. Cấu hình Neoterm với Vị trí cố định
 " =============================
 " Mở terminal mới (Ctrl + T)
 nnoremap <F12> :Ttoggle<CR>
+
+" Đảm bảo terminal luôn mở ở góc phải trên cùng
+autocmd TermOpen * call PositionTerminal()
+
+" Hàm di chuyển terminal đến góc phải trên cùng
+function! PositionTerminal()
+  " Lấy kích thước của terminal và cửa sổ Neovim
+  let l:width = &columns
+  let l:height = &lines
+
+  " Đặt vị trí của terminal
+  " Điều chỉnh để đặt cửa sổ terminal ở góc phải trên
+  call nvim_win_set_config(0, {'relative': 'editor', 'row': 0, 'col': l:width - 20, 'width': 80, 'height': 20})
+endfunction
 
 " Đóng terminal
 tnoremap <C-q> <C-\><C-n>:Tclose<CR>
@@ -128,6 +142,7 @@ tnoremap <C-q> <C-\><C-n>:Tclose<CR>
 " Di chuyển giữa các terminal (nếu bạn mở nhiều)
 nnoremap <C-j> :Tnext<CR>
 nnoremap <C-k> :Tprev<CR>
+
 
 " Overwrite some color highlight 
 if (has("autocmd"))
