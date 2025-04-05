@@ -20,7 +20,7 @@ set mouse=a
 call plug#begin('~/.vim/plugged')
 " Theme OneDark
 Plug 'joshdick/onedark.vim'
-Plug 'kassio/neoterm'  " Thêm plugin neoterm
+Plug 'voldikss/vim-floaterm'
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
 " Quản lý cây thư mục (NERDTree)
 Plug 'preservim/nerdtree'
@@ -64,6 +64,8 @@ set guifont=Consolas:h10
 autocmd filetype cpp nnoremap <F9> :w <bar> !g++ -std=c++17 % -o %:r -Wl,--stack,268435456<CR>
 autocmd filetype cpp nnoremap <F10> :!%:r<CR>
 autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
+
+
 
 " Cấu hình Lualine đầy đủ (bao gồm tabline hiển thị buffer)
 lua << EOF
@@ -116,32 +118,23 @@ require('lualine').setup {
 }
 EOF
 
-" =============================
-" 8. Cấu hình Neoterm với Vị trí cố định
-" =============================
+" Đặt vị trí terminal nổi
+let g:floaterm_position = 'center'
+
+
 " Mở terminal mới (Ctrl + T)
-nnoremap <F12> :Ttoggle<CR>
+nnoremap <F12> :FloatermNew<CR>
 
-" Đảm bảo terminal luôn mở ở góc phải trên cùng
-autocmd TermOpen * call PositionTerminal()
+" Đóng terminal (bấm ESC để về normal mode trước, rồi Ctrl + Q)
+tnoremap <C-q> <C-\><C-n>:FloatermKill<CR>
 
-" Hàm di chuyển terminal đến góc phải trên cùng
-function! PositionTerminal()
-  " Lấy kích thước của terminal và cửa sổ Neovim
-  let l:width = &columns
-  let l:height = &lines
-
-  " Đặt vị trí của terminal
-  " Điều chỉnh để đặt cửa sổ terminal ở góc phải trên
-  call nvim_win_set_config(0, {'relative': 'editor', 'row': 0, 'col': l:width - 20, 'width': 80, 'height': 20})
-endfunction
-
-" Đóng terminal
-tnoremap <C-q> <C-\><C-n>:Tclose<CR>
+" Ẩn/hiện terminal (Ctrl + H)
+nnoremap <C-g> :FloatermToggle<CR>
+tnoremap <C-g> <C-\><C-n>:FloatermToggle<CR>
 
 " Di chuyển giữa các terminal (nếu bạn mở nhiều)
-nnoremap <C-j> :Tnext<CR>
-nnoremap <C-k> :Tprev<CR>
+nnoremap <C-j> :FloatermNext<CR>
+nnoremap <C-k> :FloatermPrev<CR>
 
 
 " Overwrite some color highlight 
@@ -153,6 +146,7 @@ if (has("autocmd"))
       \ * call onedark#extend_highlight("LineNr", {"fg": {"gui": "#728083"}})
   augroup END
 endif
+
 
 " Disable automatic comment in newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
