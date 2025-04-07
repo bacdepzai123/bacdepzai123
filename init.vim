@@ -16,10 +16,14 @@ set mouse=a                 " Kích hoạt chuột trong mọi chế độ
 set notermguicolors         " Tắt màu sắc trong terminal
 set colorcolumn=120
 set guicursor=i:ver100
+set showtabline=2
 " ============================= 
 " 2. Cài đặt Plugin Manager - vim-plug
 " ============================= 
 call plug#begin('~/.vim/plugged')
+" Code intellisense
+Plug 'neoclide/coc.nvim', 
+    \ {'branch': 'release'}                     " Language server protocol (LSP) 
 " Các plugin đã có
 Plug 'joshdick/onedark.vim'
 Plug 'preservim/nerdtree'
@@ -29,14 +33,6 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'voldikss/vim-floaterm' 
-Plug 'neovim/nvim-lspconfig'        " LSP Configuration
-Plug 'hrsh7th/cmp-nvim-lsp'         " LSP Source cho nvim-cmp
-Plug 'hrsh7th/nvim-cmp'             " Plugin hoàn thành mã
-Plug 'hrsh7th/cmp-buffer'           " Source buffer cho nvim-cmp
-Plug 'hrsh7th/cmp-path'             " Source path cho nvim-cmp
-Plug 'hrsh7th/cmp-cmdline'          " Source cmdline cho nvim-cmp
-Plug 'hrsh7th/vim-vsnip'            " Plugin snippets
-Plug 'saadparwaiz1/cmp_luasnip'     " Source snippet cho nvim-cmp
 " Tìm file (tùy chọn cho các nút hoạt động)
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -54,16 +50,20 @@ colorscheme onedark
 set nobackup      
 set noswapfile
 set nowritebackup
-set termguicolors
+"set termguicolors
 set synmaxcol=3000    " Prevent breaking syntax highlight when string too long. Max = 3000
-" Tùy chỉnh màu sắc của colorcolumn
-highlight ColorColumn ctermbg=darkgray 
+
 " ============================= 
 " 5. Cấu hình NERDTree (Quản lý file)
 " ============================= 
 nnoremap <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1  " Hiện file ẩn
 let g:NERDTreeQuitOnOpen=1 " Đóng tự động khi mở file
+
+syntax match cppFunction /\v\w+\s*(.*)\s*\{/
+highlight cppFunction ctermfg=blue guifg=#0000FF
+
+let g:python3_host_prog = 'C:/Users/Admin/AppData/Local/Programs/Python/Python313/python.exe'
 
 " ============================= 
 " 6. Cấu hình phím tắt hữu ích
@@ -73,7 +73,15 @@ nnoremap <C-h> :nohl<CR>
 nnoremap <C-p> :Files<CR> 
 
 set guifont=Consolas:h10
+" Mở danh sách diagnostics (lỗi/warning) với phím tắt <leader>d
+nnoremap <silent> <leader>d :CocList diagnostics<CR>
 
+" Hoặc nếu muốn xem diagnostics ngay tại vị trí con trỏ (popup)
+nnoremap <silent> <leader>D :CocCommand diagnostics.show<CR>
+
+"Bonus Jump qua lại giữa các lỗi
+nnoremap <silent> [d <Plug>(coc-diagnostic-prev)
+nnoremap <silent> ]d <Plug>(coc-diagnostic-next)
 " ============================= 
 " 7. Tắt tự động đóng ngoặc (Auto Pairs)
 " ============================= 
@@ -84,6 +92,7 @@ autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\
 " ============================= 
 " Cấu hình Lualine đầy đủ
 " ============================= 
+
 lua << EOF
 require('lualine').setup {
   options = {
@@ -124,54 +133,23 @@ require('lualine').setup {
     lualine_a = {'tabs'},
     lualine_b = {'buffers'},
     lualine_c = {'filename', 'filetype'},
-    lualine_x = {},
-    lualine_y = {},
+    lualine_x = {'location'},
+    lualine_y = {'branch'},
     lualine_z = {}
   },
+  extensions = {'fugitive'},
   winbar = {},
   inactive_winbar = {},
   extensions = {}
 }
 EOF
-
 " ============================= 
 " 3. Cấu hình LSP với clangd
 " ============================= 
-lua << EOF
-require'lspconfig'.clangd.setup{
-  cmd = { "clangd", "--compile-commands-dir=C:/Users/Admin/Documents/Competitive_Programming/Codeforces" },  -- Đảm bảo rằng bạn thay đổi đúng đường dẫn
-  filetypes = { "c", "cpp", "objc", "objcpp" },
-  root_dir = require('lspconfig').util.root_pattern(".git", "compile_commands.json", "CMakeLists.txt"),
-}
-EOF
 
 " ============================= 
 " 4. Cấu hình nvim-cmp
 " ============================= 
-lua << EOF
-local cmp = require'cmp'
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)  -- Dùng với vsnip
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-  }, {
-    { name = 'buffer' },
-  })
-})
-EOF
 
 " ============================= 
 " 10. Cấu hình Terminal với Floaterm
@@ -184,12 +162,35 @@ tnoremap <C-g> <C-\><C-n>:FloatermToggle<CR>
 nnoremap <C-j> :FloatermNext<CR>
 nnoremap <C-k> :FloatermPrev<CR>
 
+
+
 " ============================= 
 " Overwrite some color highlight 
 " ============================= 
 if (has("autocmd"))
   augroup colorextend
-    autocmd ColorScheme * call onedark#extend_highlight("Comment",{"fg": {"gui": "#728083"}})
-    autocmd ColorScheme * call onedark#extend_highlight("LineNr", {"fg": {"gui": "#728083"}})
+    autocmd ColorScheme * call onedark#extend_highlight("Comment",{"fg": {"ctermfg": "#728083"}})
+    autocmd ColorScheme * call onedark#extend_highlight("LineNr", {"fg": {"ctermfg": "#728083"}})
+  augroup END
+endif
+
+" Close buffer without exitting vim 
+nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
+
+
+let g:onedark_color_overrides = {
+\ "background": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
+\ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
+\}
+
+if (has("autocmd"))
+  augroup colorextend
+    autocmd!
+    " Make `Function`s bold in GUI mode
+    autocmd ColorScheme * call onedark#extend_highlight("Function", { "cterm": "bold" })
+    " Override the `Statement` foreground color in 256-color mode
+    autocmd ColorScheme * call onedark#extend_highlight("Statement", { "fg": { "cterm": 128 } })
+    " Override the `Identifier` background color in GUI mode
+    autocmd ColorScheme * call onedark#extend_highlight("Identifier", { "bg": { "cterm": "#333333" } })
   augroup END
 endif
