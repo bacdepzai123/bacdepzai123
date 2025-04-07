@@ -15,6 +15,7 @@ set nowrap                  " Không tự động xuống dòng
 set mouse=a                 " Kích hoạt chuột trong mọi chế độ
 set notermguicolors         " Tắt màu sắc trong terminal
 set colorcolumn=120
+set guicursor=i:ver100
 " ============================= 
 " 2. Cài đặt Plugin Manager - vim-plug
 " ============================= 
@@ -36,8 +37,13 @@ Plug 'hrsh7th/cmp-path'             " Source path cho nvim-cmp
 Plug 'hrsh7th/cmp-cmdline'          " Source cmdline cho nvim-cmp
 Plug 'hrsh7th/vim-vsnip'            " Plugin snippets
 Plug 'saadparwaiz1/cmp_luasnip'     " Source snippet cho nvim-cmp
+" Tìm file (tùy chọn cho các nút hoạt động)
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'goolord/alpha-nvim'
 call plug#end()
-
+" Gọi file Lua
+lua require('alpha_config')
 " ============================= 
 " 3. Cấu hình giao diện
 " ============================= 
