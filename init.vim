@@ -13,8 +13,7 @@ set clipboard=unnamedplus   " Copy/Paste với clipboard của hệ thống
 set hidden                  " Cho phép chuyển buffer mà không cần lưu
 set nowrap                  " Không tự động xuống dòng
 set mouse=a                 " Kích hoạt chuột trong mọi chế độ
-set notermguicolors         " Tắt màu sắc trong terminal
-set colorcolumn=120
+set termguicolors         " Tắt màu sắc trong terminal
 set guicursor=i:ver100
 set showtabline=2
 " ============================= 
@@ -25,7 +24,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', 
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
 " Các plugin đã có
-Plug 'joshdick/onedark.vim'
+" " Using Vim-Plug
+Plug 'navarasu/onedark.nvim'
 Plug 'preservim/nerdtree'
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
 Plug 'ryanoasis/vim-devicons'
@@ -44,8 +44,6 @@ lua require('alpha_config')
 " 3. Cấu hình giao diện
 " ============================= 
 syntax on
-set background=dark
-colorscheme onedark
 
 set nobackup      
 set noswapfile
@@ -134,7 +132,7 @@ require('lualine').setup {
     lualine_b = {'buffers'},
     lualine_c = {'filename', 'filetype'},
     lualine_x = {'location'},
-    lualine_y = {'branch'},
+    lualine_y = {'filetype'},
     lualine_z = {}
   },
   extensions = {'fugitive'},
@@ -164,33 +162,64 @@ nnoremap <C-k> :FloatermPrev<CR>
 
 
 
-" ============================= 
-" Overwrite some color highlight 
-" ============================= 
-if (has("autocmd"))
-  augroup colorextend
-    autocmd ColorScheme * call onedark#extend_highlight("Comment",{"fg": {"ctermfg": "#728083"}})
-    autocmd ColorScheme * call onedark#extend_highlight("LineNr", {"fg": {"ctermfg": "#728083"}})
-  augroup END
-endif
-
 " Close buffer without exitting vim 
 nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 
 
-let g:onedark_color_overrides = {
-\ "background": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
-\ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
-\}
 
-if (has("autocmd"))
-  augroup colorextend
-    autocmd!
-    " Make `Function`s bold in GUI mode
-    autocmd ColorScheme * call onedark#extend_highlight("Function", { "cterm": "bold" })
-    " Override the `Statement` foreground color in 256-color mode
-    autocmd ColorScheme * call onedark#extend_highlight("Statement", { "fg": { "cterm": 128 } })
-    " Override the `Identifier` background color in GUI mode
-    autocmd ColorScheme * call onedark#extend_highlight("Identifier", { "bg": { "cterm": "#333333" } })
-  augroup END
+
+
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
+
+
+let g:onedark_config = {
+  \ 'style': 'warmer',
+  \ 'toggle_style_key': '<leader>ts',
+  \ 'ending_tildes': v:true,
+  \ 'diagnostics': {
+    \ 'darker': v:false,
+    \ 'background': v:false,
+  \ },
+\ }
+
+colorscheme onedark
+lua << EOF
+require('onedark').setup {
+  colors = {
+    bright_orange = "#ff8800",    -- define a new color
+    green = '#00ffaa',            -- redefine an existing color
+  },
+  highlights = {
+    ["@keyword"] = {fg = '$green'},
+    ["@string"] = {fg = '$bright_orange', bg = '#00ff00', fmt = 'bold'},
+    ["@function"] = {fg = '#0000ff', sp = '$cyan', fmt = 'underline,italic'},
+    ["@function.builtin"] = {fg = '#0059ff'}
+  },
+}
+EOF
