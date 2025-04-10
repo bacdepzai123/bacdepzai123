@@ -13,9 +13,10 @@ set clipboard=unnamedplus   " Copy/Paste với clipboard của hệ thống
 set hidden                  " Cho phép chuyển buffer mà không cần lưu
 set nowrap                  " Không tự động xuống dòng
 set mouse=a                 " Kích hoạt chuột trong mọi chế độ
-set termguicolors         " Tắt màu sắc trong terminal
+set notermguicolors         " Tắt màu sắc trong terminal
 set guicursor=i:ver100
 set showtabline=2
+set nocursorline
 " ============================= 
 " 2. Cài đặt Plugin Manager - vim-plug
 " ============================= 
@@ -25,7 +26,8 @@ Plug 'neoclide/coc.nvim',
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
 " Các plugin đã có
 " " Using Vim-Plug
-Plug 'navarasu/onedark.nvim'
+Plug 'joshdick/onedark.vim'
+Plug 'folke/which-key.nvim'
 Plug 'preservim/nerdtree'
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
 Plug 'ryanoasis/vim-devicons'
@@ -63,6 +65,8 @@ highlight cppFunction ctermfg=blue guifg=#0000FF
 
 let g:python3_host_prog = 'C:/Users/Admin/AppData/Local/Programs/Python/Python313/python.exe'
 
+colorscheme onedark
+
 " ============================= 
 " 6. Cấu hình phím tắt hữu ích
 " ============================= 
@@ -72,7 +76,7 @@ nnoremap <C-p> :Files<CR>
 
 set guifont=Consolas:h10
 " Mở danh sách diagnostics (lỗi/warning) với phím tắt <leader>d
-nnoremap <silent> <leader>d :CocList diagnostics<CR>
+nnoremap <silent> <leader>d :CocDiagnostics<CR>
 
 " Hoặc nếu muốn xem diagnostics ngay tại vị trí con trỏ (popup)
 nnoremap <silent> <leader>D :CocCommand diagnostics.show<CR>
@@ -86,6 +90,10 @@ nnoremap <silent> ]d <Plug>(coc-diagnostic-next)
 autocmd filetype cpp nnoremap <F9> :w <bar> !g++ -std=c++17 % -o %:r -Wl,--stack,268435456<CR>
 autocmd filetype cpp nnoremap <F10> :!%:r<CR>
 autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
+nnoremap <leader>s :w<CR>
+nnoremap <leader>c :%y+<CR>
+nnoremap <leader>wq :wq<CR>
+nnoremap <leader>qi :q!<CR>
 
 " ============================= 
 " Cấu hình Lualine đầy đủ
@@ -153,8 +161,8 @@ EOF
 " 10. Cấu hình Terminal với Floaterm
 " ============================= 
 let g:floaterm_position = 'topright'
-nnoremap <F12> :FloatermNew<CR>
-tnoremap <C-q> <C-\><C-n>:FloatermKill<CR>
+nnoremap <silent> <leader>f :FloatermNew<CR>
+tnoremap <silent> <leader>q <C-\><C-n>:FloatermKill<CR>
 nnoremap <C-g> :FloatermToggle<CR>
 tnoremap <C-g> <C-\><C-n>:FloatermToggle<CR>
 nnoremap <C-j> :FloatermNext<CR>
@@ -198,28 +206,7 @@ else
 endif
 
 
-let g:onedark_config = {
-  \ 'style': 'warmer',
-  \ 'toggle_style_key': '<leader>ts',
-  \ 'ending_tildes': v:true,
-  \ 'diagnostics': {
-    \ 'darker': v:false,
-    \ 'background': v:false,
-  \ },
-\ }
-
-colorscheme onedark
 lua << EOF
-require('onedark').setup {
-  colors = {
-    bright_orange = "#ff8800",    -- define a new color
-    green = '#00ffaa',            -- redefine an existing color
-  },
-  highlights = {
-    ["@keyword"] = {fg = '$green'},
-    ["@string"] = {fg = '$bright_orange', bg = '#00ff00', fmt = 'bold'},
-    ["@function"] = {fg = '#0000ff', sp = '$cyan', fmt = 'underline,italic'},
-    ["@function.builtin"] = {fg = '#0059ff'}
-  },
-}
+require("which-key").setup {}
 EOF
+
