@@ -26,13 +26,18 @@ Plug 'neoclide/coc.nvim',
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
 " Các plugin đã có
 " " Using Vim-Plug
+
+
+" Status bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
 Plug 'shaunsingh/solarized.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'preservim/nerdtree'
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
 Plug 'ryanoasis/vim-devicons'
-Plug 'nvim-lualine/lualine.nvim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'voldikss/vim-floaterm' 
@@ -99,56 +104,6 @@ nnoremap <leader>qi :q!<CR>
 " Cấu hình Lualine đầy đủ
 " ============================= 
 
-lua << EOF
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'solarized',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 100,
-      tabline = 100,
-      winbar = 100,
-    }
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename' , 'filetype'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename' , 'filetype'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {
-    lualine_a = {'tabs'},
-    lualine_b = {'buffers'},
-    lualine_c = {'filename', 'filetype'},
-    lualine_x = {'location'},
-    lualine_y = {'filetype'},
-    lualine_z = {}
-  },
-  extensions = {'fugitive'},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
-}
-EOF
 " ============================= 
 " 3. Cấu hình LSP với clangd
 " ============================= 
@@ -240,3 +195,17 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
+
+
+let g:airline_powerline_fonts = 1                       " Enable font for status bar
+let g:airline_theme='solarized'                           " Theme OneDark
+
+let g:airline#extensions#tabline#enabled = 1            " Enable Tab bar
+let g:airline#extensions#tabline#left_sep = ' '         " Enable Tab seperator 
+let g:airline#extensions#tabline#left_alt_sep = '|'     " Enable Tab seperator
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline#extensions#tabline#fnamemod = ':t'        " Set Tab name as file name
+
+let g:airline#extensions#whitespace#enabled = 0         " Remove warning whitespace"
+
+let g:airline_section_error=''
