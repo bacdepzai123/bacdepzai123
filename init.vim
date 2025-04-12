@@ -13,7 +13,7 @@ set clipboard=unnamedplus   " Copy/Paste với clipboard của hệ thống
 set hidden                  " Cho phép chuyển buffer mà không cần lưu
 set nowrap                  " Không tự động xuống dòng
 set mouse=a                 " Kích hoạt chuột trong mọi chế độ
-set notermguicolors         " Tắt màu sắc trong terminal
+set termguicolors         " Tắt màu sắc trong terminal
 set guicursor=i:ver100
 set showtabline=2
 set nocursorline
@@ -26,7 +26,8 @@ Plug 'neoclide/coc.nvim',
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
 " Các plugin đã có
 " " Using Vim-Plug
-Plug 'joshdick/onedark.vim'
+Plug 'shaunsingh/solarized.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'preservim/nerdtree'
 Plug 'nvim-tree/nvim-web-devicons'   " Icons cho lualine
@@ -65,8 +66,7 @@ highlight cppFunction ctermfg=blue guifg=#0000FF
 
 let g:python3_host_prog = 'C:/Users/Admin/AppData/Local/Programs/Python/Python313/python.exe'
 
-colorscheme onedark
-
+set background=light
 " ============================= 
 " 6. Cấu hình phím tắt hữu ích
 " ============================= 
@@ -103,7 +103,7 @@ lua << EOF
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'onedark',
+    theme = 'solarized',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
@@ -179,7 +179,7 @@ nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
-" no select by `"suggest.noselect": true` in your configuration file
+" no select by "suggest.noselect": true in your configuration file
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config
 inoremap <silent><expr> <TAB>
@@ -208,5 +208,35 @@ endif
 
 lua << EOF
 require("which-key").setup {}
+EOF
+
+
+
+"let &shell = 'pwsh'
+"let &shellcmdflag = '-NoLogo -NoProfile -Command'
+"let &shellquote = ''
+"let &shellxquote = ''
+
+
+" Example config in Vim-Script
+let g:solarized_italic_comments = v:true
+let g:solarized_italic_keywords = v:true
+let g:solarized_italic_functions = v:true
+let g:solarized_italic_variables = v:false
+let g:solarized_contrast = v:true
+let g:solarized_borders = v:false
+let g:solarized_disable_background = v:false
+
+" Load the colorsheme
+colorscheme solarized
+
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"cpp"},
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
 EOF
 
