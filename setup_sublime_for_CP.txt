@@ -1,7 +1,0 @@
-Plugin(sublime-text) :
-  LSP + LSP-clangd
-  Brackethighlight
-  C++ snippet
-  FileIcons
-  Terminal
-OS: Ubuntu
