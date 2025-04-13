@@ -15,9 +15,10 @@ set hidden                  " Cho phép chuyển buffer mà không cần lưu
 set nowrap                  " Không tự động xuống dòng
 set mouse=a                 " Kích hoạt chuột trong mọi chế độ
 set termguicolors         " Tắt màu sắc trong terminal
-set guicursor=i:ver100
 set showtabline=2
 set nocursorline
+set guicursor=i:ver100
+
 " ============================= 
 " 2. Cài đặt Plugin Manager - vim-plug
 " ============================= 
@@ -42,13 +43,9 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'voldikss/vim-floaterm' 
-" Tìm file (tùy chọn cho các nút hoạt động)
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'goolord/alpha-nvim'
+
 call plug#end()
 " Gọi file Lua
-lua require('alpha_config')
 " ============================= 
 " 3. Cấu hình giao diện
 " ============================= 
