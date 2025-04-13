@@ -1,6 +1,7 @@
 " ============================= 
 " 1. Cấu hình cơ bản
 " ============================= 
+syntax enable
 set nocompatible            " Tắt chế độ tương thích với Vi
 set number                  " Hiển thị số dòng
 set relativenumber          " Bật số dòng tương đối
@@ -209,3 +210,4 @@ let g:airline#extensions#tabline#fnamemod = ':t'        " Set Tab name as file n
 let g:airline#extensions#whitespace#enabled = 0         " Remove warning whitespace"
 
 let g:airline_section_error=''
+
