@@ -62,8 +62,10 @@ int main() {
     cout.tie(nullptr);
     int test_case = 1;
     //cin >> test_case;
+    int i = 1;
     while(test_case--) {
-        run_case();
+        run_case(i);
+        i++;
     }
     TIME_ELAPSED();
     return (0^0);
